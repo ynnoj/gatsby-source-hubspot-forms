@@ -11,6 +11,12 @@ exports.sourceNodes = async (
   { actions: { createNode }, createContentDigest, reporter },
   pluginOptions
 ) => {
+  const activity = reporter.activityTimer(
+    "gatsby-source-hubspot-forms: Fetching forms"
+  )
+
+  activity.start()
+
   try {
     const response = await fetch(
       `https://api.hubapi.com/forms/v2/forms?hapikey=${pluginOptions.apiKey}`
@@ -38,5 +44,7 @@ exports.sourceNodes = async (
     })
   } catch (error) {
     reporter.panic("gatsby-source-hubspot-forms:", new Error(error))
+  } finally {
+    activity.end()
   }
 }
