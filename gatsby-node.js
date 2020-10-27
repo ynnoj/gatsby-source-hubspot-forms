@@ -1,9 +1,9 @@
-const fetch = require("node-fetch")
+const fetch = require('node-fetch')
 
 exports.onPreBootstrap = ({ reporter }, pluginOptions) => {
   if (!pluginOptions.apiKey)
     return reporter.panic(
-      "gatsby-source-hubspot-forms: You must provide your HubSpot API key"
+      'gatsby-source-hubspot-forms: You must provide your HubSpot API key'
     )
 }
 
@@ -12,7 +12,7 @@ exports.sourceNodes = async (
   pluginOptions
 ) => {
   const activity = reporter.activityTimer(
-    "gatsby-source-hubspot-forms: Fetching forms"
+    'gatsby-source-hubspot-forms: Fetching forms'
   )
 
   activity.start()
@@ -26,11 +26,11 @@ exports.sourceNodes = async (
 
     const forms = await response.json()
 
-    return forms.forEach(form => {
+    return forms.forEach((form) => {
       const formData = {
         ...form,
         id: form.guid,
-        portalId: form.portalId.toString(),
+        portalId: form.portalId.toString()
       }
 
       createNode({
@@ -38,12 +38,12 @@ exports.sourceNodes = async (
         internal: {
           type: `HubSpotForm`,
           content: JSON.stringify(formData),
-          contentDigest: createContentDigest(formData),
-        },
+          contentDigest: createContentDigest(formData)
+        }
       })
     })
   } catch (error) {
-    reporter.panic("gatsby-source-hubspot-forms:", new Error(error))
+    reporter.panic('gatsby-source-hubspot-forms:', new Error(error))
   } finally {
     activity.end()
   }
