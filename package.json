@@ -1,20 +1,18 @@
 {
-  "name": "gatsby-source-hubspot-forms",
-  "description": "Gatsby source plugin",
-  "repository": "https://github.com/jamaljeantobias/gatsby-source-hubspot-forms",
-  "author": "Jamal Jean <jamal.tobias@gmail.com>",
+  "name": "@ynnoj/gatsby-source-hubspot-forms",
+  "version": "1.0.0",
+  "description": "Gatsby source plugin for HubSpot form data",
+  "main": "index.js",
+  "repository": "git@github.com:ynnoj/gatsby-source-hubspot-forms.git",
   "keywords": [
     "gatsby",
     "gatsby-plugin",
-    "hubspot",
-    "forms"
+    "gatsby-source-plugin",
+    "hubspot"
   ],
+  "author": "Jonathan Steele <jonathan@steele.pro> (https://steele.pro)",
   "license": "MIT",
-  "peerDependencies": {
-    "gatsby": ">=2"
-  },
   "dependencies": {
     "node-fetch": "2.6.1"
-  },
-  "version": "2.1.3"
+  }
 }
