@@ -11,9 +11,11 @@ exports.onPreBootstrap = ({ reporter }, pluginOptions) => {
 exports.sourceNodes = async ({ boundActionCreators }, pluginOptions) => {
   try {
     const { createNode } = boundActionCreators
-    const forms = await fetch(
+    const response = await fetch(
       `https://api.hubapi.com/forms/v2/forms?hapikey=${pluginOptions.apiKey}`
-    ).then(res => res.json())
+    )
+
+    if (!response.ok) throw new Error(response.statusText)
 
     response.map((item, index) => {
       const formNode = {
