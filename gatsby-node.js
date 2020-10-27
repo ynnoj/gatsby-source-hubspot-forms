@@ -1,10 +1,5 @@
-const _ = require(`lodash`)
-const Promise = require(`bluebird`)
-const path = require(`path`)
-const slash = require(`slash`)
-const axios = require("axios")
+const fetch = require("node-fetch")
 const crypto = require("crypto")
-var fs = require("fs")
 
 exports.onPreBootstrap = ({ reporter }, pluginOptions) => {
   if (!pluginOptions.apiKey)
