@@ -6,13 +6,18 @@ const axios = require("axios")
 const crypto = require("crypto")
 var fs = require("fs")
 
-exports.sourceNodes = async ({ boundActionCreators }, configOptions) => {
+exports.onPreBootstrap = ({ reporter }, pluginOptions) => {
+  if (!pluginOptions.apiKey)
+    return reporter.panic(
+      "gatsby-source-hubspot-forms: You must provide your HubSpit API key"
+    )
+}
+
+exports.sourceNodes = async ({ boundActionCreators }, pluginOptions) => {
   try {
-    const API_KEY = configOptions.apiKey
-    if (!API_KEY) throw new Error("No Hubspot API key provided")
     const { createNode } = boundActionCreators
     const fetchAllFormNodes = await axios.get(
-      `https://api.hubapi.com/forms/v2/forms?hapikey=${API_KEY}`
+      `https://api.hubapi.com/forms/v2/forms?hapikey=${pluginOptions.apiKey}`
     )
     const response = await fetchAllFormNodes.data
 
