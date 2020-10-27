@@ -3,7 +3,7 @@ const fetch = require("node-fetch")
 exports.onPreBootstrap = ({ reporter }, pluginOptions) => {
   if (!pluginOptions.apiKey)
     return reporter.panic(
-      "gatsby-source-hubspot-forms: You must provide your HubSpit API key"
+      "gatsby-source-hubspot-forms: You must provide your HubSpot API key"
     )
 }
 
