@@ -1,5 +1,4 @@
 const fetch = require("node-fetch")
-const crypto = require("crypto")
 
 exports.onPreBootstrap = ({ reporter }, pluginOptions) => {
   if (!pluginOptions.apiKey)
@@ -8,46 +7,36 @@ exports.onPreBootstrap = ({ reporter }, pluginOptions) => {
     )
 }
 
-exports.sourceNodes = async ({ boundActionCreators }, pluginOptions) => {
+exports.sourceNodes = async (
+  { actions: { createNode }, createContentDigest, reporter },
+  pluginOptions
+) => {
   try {
-    const { createNode } = boundActionCreators
     const response = await fetch(
       `https://api.hubapi.com/forms/v2/forms?hapikey=${pluginOptions.apiKey}`
     )
 
     if (!response.ok) throw new Error(response.statusText)
 
-    response.map((item, index) => {
-      const formNode = {
-        id: item.guid,
-        portalId: item.portalId.toString(),
-        guid: item.guid,
-        name: item.name,
-        action: item.action,
-        method: item.method,
-        cssClass: item.cssClass,
-        redirect: item.redirect,
-        submitText: item.submitText,
-        followUpId: item.followUpId,
-        notifyRecipients: item.notifyRecipients,
-        leadNurturingCampaignId: item.leadNurturingCampaignId,
-        formFieldGroups: item.formFieldGroups,
-        children: [],
-        parent: `__SOURCE__`,
-        internal: {
-          type: `HubspotForm`,
-        },
+    const forms = await response.json()
+
+    return forms.forEach(form => {
+      const formData = {
+        ...form,
+        id: form.guid,
+        portalId: form.portalId.toString(),
       }
-      console.log(` ${index + 1} :Creating Hubspot Form  ${item.name}`)
-      const contentDigest = crypto
-        .createHash(`md5`)
-        .update(JSON.stringify(formNode))
-        .digest(`hex`)
-      formNode.internal.contentDigest = contentDigest
-      createNode(formNode)
+
+      createNode({
+        ...formData,
+        internal: {
+          type: `HubSpotForm`,
+          content: JSON.stringify(formData),
+          contentDigest: createContentDigest(formData),
+        },
+      })
     })
-    return
-  } catch (err) {
-    throw new Error(err)
+  } catch (error) {
+    reporter.panic("gatsby-source-hubspot-forms:", new Error(error))
   }
 }
