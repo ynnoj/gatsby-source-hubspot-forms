@@ -11,10 +11,9 @@ exports.onPreBootstrap = ({ reporter }, pluginOptions) => {
 exports.sourceNodes = async ({ boundActionCreators }, pluginOptions) => {
   try {
     const { createNode } = boundActionCreators
-    const fetchAllFormNodes = await axios.get(
+    const forms = await fetch(
       `https://api.hubapi.com/forms/v2/forms?hapikey=${pluginOptions.apiKey}`
-    )
-    const response = await fetchAllFormNodes.data
+    ).then(res => res.json())
 
     response.map((item, index) => {
       const formNode = {
